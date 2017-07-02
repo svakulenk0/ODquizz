@@ -2,8 +2,8 @@ from setuptools import setup
 
 
 setup(
-    name='Pyladies-Pastebin',
-    py_modules=['pastebin'],
+    name='localODquizz',
+    py_modules=['localODquizz'],
     install_requires=[
         'Flask',
         'Flask-OAuth',
