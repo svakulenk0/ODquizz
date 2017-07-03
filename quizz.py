@@ -10,7 +10,7 @@ from parse_table import csvclean_service
 
 from settings import CONSUMER_KEY, CONSUMER_SECRET
 
-global table_url
+table_url = None
 
 app = Flask(__name__)
 app.config.update(
@@ -67,10 +67,7 @@ def check_user_status():
 
 
 def generate_table(table_url):
-    if table_url:
-        table = csvclean_service(table_url)
-    else:
-        table = csvclean_service()
+    table = csvclean_service(table_url)
     # run with default csv url
     # table = csvclean_service()
     header = json.dumps(table.header_line)
@@ -80,38 +77,39 @@ def generate_table(table_url):
 
 @app.route('/', methods=['GET', 'POST'])
 def new_quiz():
+    global table_url
     rows = None
     header = None
-    table_url = None
     if request.method == 'POST':
         # return render_template('table.html', rows=rows, header=header)
-        if 'url' in request.form:
-            print request.form['url']
-            table_url = request.form['url']
-            header, rows = generate_table(table_url)
-        elif 'question' in request.form:
-            print request.form['question']
-            string = request.form['question']
-            row = request.form['row']
-            column = request.form['col']
-            question_obj = QuizzQuestion(g.user, string, row, column, table_url)
-            db.session.add(question_obj)
-            db.session.commit()
+        # if 'url' in request.form:
+            # print request.form['url']
+        table_url = request.form['url']
+        header, rows = generate_table(table_url)
+        # elif 'question' in request.form:
+        #     print request.form['question']
+        #     string = request.form['question']
+        #     row = request.form['row']
+        #     column = request.form['col']
+        #     question_obj = QuizzQuestion(g.user, string, row, column, table_url)
+        #     db.session.add(question_obj)
+        #     db.session.commit()
             # return redirect(url_for('show_question', question_id=question_obj.id))
     return render_template('new_quiz.html', rows=rows, header=header)
 
 
 @app.route('/new_question', methods=['GET', 'POST'])
 def add_question():
+    global table_url
     if request.method == 'POST':
         string = request.form['question']
         row = request.form['row']
         column = request.form['col']
-        question_obj = QuizzQuestion(g.user, string, row, column, '')
+        question_obj = QuizzQuestion(g.user, string, row, column, table_url)
         db.session.add(question_obj)
         db.session.commit()
         return redirect(url_for('show_question', question_id=question_obj.id))
-    # return render_template('layout.html')
+    return render_template('layout.html')
 
 
 @app.route('/<int:question_id>')

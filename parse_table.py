@@ -14,7 +14,7 @@ from pyyacp.yacp import YACParser
 TEST_TABLE_URL = "https://www.wien.gv.at/finanzen/ogd/hunde-wien.csv"
 
 
-def csvclean_service(url=TEST_TABLE_URL):
+def csvclean_service(url):
     '''
     returns parsed table object from the YACParser
     '''
