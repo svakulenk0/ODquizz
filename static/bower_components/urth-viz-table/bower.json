@@ -1,0 +1,27 @@
+{
+  "name": "urth-viz-table",
+  "version": "0.0.1",
+  "authors": [
+    "Jupyter Community"
+  ],
+  "description": "An element that displays a table with specified data and column headers.",
+  "main": "urth-viz-table.html",
+  "keywords": [
+    "urth",
+    "table",
+    "web-components"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "handsontable": "handsontable/handsontable#^0.25",
+    "polymer": "Polymer/polymer#^1.2.4",
+    "requirejs": "^2.1.0"
+  },
+  "private": true
+}

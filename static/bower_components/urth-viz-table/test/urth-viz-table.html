@@ -1,0 +1,226 @@
+<!doctype html>
+<!--
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
+-->
+<html>
+<head>
+    <meta charset="utf-8">
+    <!-- STEP 1: Provide a title for the test suite. -->
+    <title>urth-viz-table tests</title>
+    <meta name='viewport' content='width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes'>
+
+    <!-- Need the web component polyfill for browsers without native support. -->
+    <script src='../../webcomponentsjs/webcomponents-lite.js'></script>
+
+    <!-- Load test framework and helpers. -->
+    <script src='../../web-component-tester/browser.js'></script>
+    <script src='../../test-fixture/test-fixture-mocha.js'></script>
+    <link rel='import' href='../../test-fixture/test-fixture.html'>
+
+    <!-- STEP 2: Import the element to test. -->
+    <link rel='import' href='../urth-viz-table.html'>
+    <link rel='import' href='../../urth-viz-col/urth-viz-col.html'>
+</head>
+
+<body>
+    <!-- STEP 3: Setup document with DOM to test. Use test-fixture elements
+         to ease setup and cleanup of elements. -->
+    <test-fixture id="basic">
+        <template>
+            <urth-viz-table datarows='[[1,8,5],[2,2,6],[3,5,7]]' columns='["Index","Series 1","Series 2"]'></urth-viz-table>
+        </template>
+    </test-fixture>
+
+    <test-fixture id="colTest1">
+        <template>
+            <urth-viz-table id="table" datarows='[[1,8,5],[2,2,6],[3,5,7]]' columns='["Index","Series 1","Currency"]'>
+                <urth-viz-col index="2" format="$0,0.00" type="numeric"></urth-viz-col>
+            </urth-viz-table>
+        </template>
+    </test-fixture>
+    <test-fixture id="colTest2">
+        <template>
+            <urth-viz-table id="table" datarows='[[1,8,5],[2,2,6],[3,5,7]]' columns='["Index","Series 1","Currency"]'>
+                <urth-viz-col format="$0,0.00" type="numeric"></urth-viz-col>
+            </urth-viz-table>
+        </template>
+    </test-fixture>
+
+    <script>
+    // STEP 4: Define any globals needed by the test suite.
+
+    // STEP 5: Define suite(s) and tests.
+    describe('urth-viz-table', function() {
+        var fElmt;
+        beforeEach(function(done) {
+            function listener() {
+                fElmt.removeEventListener('urth-viz-render', listener);
+                done();
+            }
+
+            fElmt = fixture('basic');
+            fElmt.datarows = [[1,8,5],[2,2,6],[3,5,7]];
+            fElmt.columns = ['Index','Series 1','Series 2'];
+            fElmt.addEventListener('urth-viz-render', listener);
+        });
+
+        it('should render a tableContainer', function(done) {
+            try {
+                expect(fElmt.querySelectorAll('.handsontable')).to.have.length.above(0);
+                done();
+            } catch( e ) {
+                done( e );
+            }
+        });
+
+        describe('_isHeightSet', function() {
+            it('should return true if height is 0', function() {
+                var settings = fElmt.hot.getSettings();
+                var stub = sinon.stub(fElmt.hot, 'getSettings', function() {
+                    settings.height = 0;
+                    return settings;
+                });
+
+                var isSet = fElmt._isHeightSet();
+                stub.restore();
+                expect(isSet).to.be.true;
+            });
+
+            it('should return true if height is 10', function() {
+                var settings = fElmt.hot.getSettings();
+                var stub = sinon.stub(fElmt.hot, 'getSettings', function() {
+                    settings.height = 10;
+                    return settings;
+                });
+
+                var isSet = fElmt._isHeightSet();
+                stub.restore();
+                expect(isSet).to.be.true;
+            });
+
+            it('should return false if height is undefined', function() {
+                var settings = fElmt.hot.getSettings();
+                var stub = sinon.stub(fElmt.hot, 'getSettings', function() {
+                    delete settings.height;
+                    return settings;
+                });
+
+                var isSet = fElmt._isHeightSet();
+                stub.restore();
+                expect(isSet).to.be.false;
+            });
+        });
+
+        describe('_handleSelection', function() {
+            it('should set the selection property to the right data', function() {
+                fElmt.rowActive = 1;
+                fElmt._handleSelection(1);
+                expect(fElmt.selection).to.eql([2,2,6]);
+            });
+
+            it('should set the selection property to an object if selectionAsObject is set', function() {
+                fElmt.selectionAsObject = true;
+                fElmt.rowActive = 1;
+                fElmt._handleSelection(1);
+                expect(fElmt.selection).to.eql({
+                    Index: 2,
+                    Series_1: 2,
+                    Series_2: 6
+                });
+            });
+        });
+
+        describe('_updateColumns', function() {
+            it('should not update table if new columns are not defined', function() {
+                fElmt._updateColumns();
+                expect(fElmt.hot.countCols()).to.equal(3);
+            });
+
+            it('should remove current column headers and replace with default headers (A, B, C) on empty columns []', function() {
+                fElmt._updateColumns([]);
+                expect(fElmt.hot.countCols()).to.equal(3);
+                expect(fElmt.hot.getColHeader()).to.eql(['A','B','C']);
+            });
+
+            it('should update table with new columns, not exceding # of cols from datarows', function() {
+                fElmt._updateColumns(['Col1', 'Col2', 'Col3', 'Col4']);
+                expect(fElmt.hot.countCols()).to.equal(3);
+            });
+        });
+
+        describe('_updateDatarows', function() {
+            it('should not update table if new data is not defined', function() {
+                fElmt._updateDatarows();
+                expect(fElmt.hot.countRows()).to.equal(3);
+            });
+
+            it('should update table with empty datarows', function() {
+                fElmt._updateDatarows([]);
+                expect(fElmt.hot.countRows()).to.equal(0);
+            });
+
+            it('should update table with new datarows', function() {
+                fElmt._updateDatarows([[1,8,5],[2,2,6],[3,5,7],[1,2,3]]);
+                expect(fElmt.hot.countRows()).to.equal(4);
+            });
+        });
+    });
+
+
+    /* tests for urth-viz-col */
+    describe('urth-viz-col', function() {
+        var table;
+        beforeEach(function(done) {
+            function listener() {
+                table.removeEventListener('urth-viz-render', listener);
+                // rendering is complete.  proceed with test
+                done();
+            }
+            table = fixture('colTest1');
+            table.addEventListener('urth-viz-render', listener);
+        });
+
+        it('should format column to the correct format', function(done) {
+            table.addEventListener('urth-viz-render', function() {
+                try { //cell should have format of $0,0.00
+                    expect(table.hot.getCell(1,2).innerHTML).to.equal('$6.00');
+                    done();
+                } catch(e) {
+                    done(e);
+                }
+            });
+
+            table.datarows = [[1,8,5],[2,2,6],[3,5,7]];
+        });
+    });
+
+    describe('urth-viz-col2', function() {
+        var table;
+        beforeEach(function(done) {
+            function listener() {
+                table.removeEventListener('urth-viz-render', listener);
+                // rendering is complete.  proceed with test
+                done();
+            }
+            table = fixture('colTest2');
+            table.addEventListener('urth-viz-render', listener);
+        });
+
+        it('should not format column if col index was not given', function(done) {
+            table.addEventListener('urth-viz-render', function() {
+                try { // cell should not have format of $0,0.00
+                    expect(table.hot.getCell(1,2).innerHTML).to.equal('6');
+                    done();
+                } catch(e) {
+                    done(e);
+                }
+            });
+
+            table.datarows = [[1,8,5],[2,2,6],[3,5,7]];
+        });
+    });
+
+    </script>
+</body>
+</html>
