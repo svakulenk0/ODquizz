@@ -22,11 +22,21 @@ Method: gamification: game-with-a-purpose providing support for semi-automated q
 
 * Flask-SQLAlchemy
 
-* pyyacp
+* pyyacp:
+
+git clone https://github.com/ODInfoBiz/pyyacp.git
+git checkout tags/v1.0
+
+to add to $PYTHONPATH: export PYTHONPATH=$PYTHONPATH:/home/svakulenko/pyyacp/
+to check: echo $PYTHONPATH  
 
 * python-dateutil
 
-* cchardet-2.1.0
+* structlog
+
+* pip install git+git://github.com/sebneu/anycsv.git
+
+* unicodecsv
 
 ## Features
 
@@ -38,6 +48,10 @@ Set up Facebook app at developers.facebook.com
 
 App Domains: localhost
 Add Platform -> Website -> Site URL: http://localhost:5000/
+
+Run:
+
+python quizz.py
 
 ## Acknowledgments
 
