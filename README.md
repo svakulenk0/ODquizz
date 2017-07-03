@@ -16,6 +16,8 @@ Method: gamification: game-with-a-purpose providing support for semi-automated q
 
 ## Requirements
 
+pip install:
+
 * Flask
 
 * Flask-OAuth
@@ -38,6 +40,19 @@ to check: echo $PYTHONPATH
 
 * unicodecsv
 
+bower install: (run inside static folder! sudo chown -R <user>:<user> /home/<user>/.config/configstore)
+
+* webcomponentsjs
+
+* handsontable/handsontable#^0.25
+
+* Polymer/polymer#^1.2.4
+
+* requirejs
+
+* jquery
+
+
 ## Features
 
 * Facebook authentication
@@ -57,7 +72,7 @@ python quizz.py
 
 * Jürgen Umbrich, Sebastian Neumaier, Vadim Savenkov. Open Data Hackathon WU. 2017.
 
-* Declarative widgets Polymer elements
+* Declarative widgets Polymer elements https://github.com/jupyter-widgets/declarativewidgets/tree/master/elements
 
 * Armin Ronacher. PyLadies Flask Workshop tutorial. https://github.com/mitsuhiko/pyladies-flask
 
