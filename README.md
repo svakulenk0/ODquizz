@@ -36,6 +36,8 @@ Method: gamification: game-with-a-purpose providing support for semi-automated q
 
 * Jürgen Umbrich, Sebastian Neumaier, Vadim Savenkov. Open Data Hackathon WU. 2017.
 
+* Declarative widgets Polymer elements
+
 * Armin Ronacher. PyLadies Flask Workshop tutorial. https://github.com/mitsuhiko/pyladies-flask
 
 ## Related Work
