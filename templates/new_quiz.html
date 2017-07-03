@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}New Quizz{% endblock %}
+{% block body %}
+
+	Click on the cell to add a new question!
+	<urth-viz-table datarows="{{rows}}"
+			  columns="{{header}}" 
+	      rows-visible="15" 
+	      selection-as-object>
+	</urth-viz-table>
+  
+  <!-- Add a new question by clicking on one of the cells that you want to use as the answer! -->
+  <!-- <form action="" method=post>
+    <div class=code><textarea name=code cols=60 rows=1></textarea></div>
+    <p><input type=submit value="Add question">
+  </form> -->
+{% endblock %}
