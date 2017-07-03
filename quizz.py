@@ -8,6 +8,8 @@ from flask.ext.oauth import OAuth
 
 from parse_table import csvclean_service
 
+from settings import CONSUMER_KEY, CONSUMER_SECRET
+
 
 app = Flask(__name__)
 app.config.update(
@@ -23,8 +25,8 @@ facebook = oauth.remote_app('facebook',
     request_token_url=None,
     access_token_url='/oauth/access_token',
     authorize_url='https://www.facebook.com/dialog/oauth',
-    consumer_key='TODO: register app on https://developers.facebook.com',
-    consumer_secret='TODO: register app on https://developers.facebook.com',
+    consumer_key=CONSUMER_KEY,
+    consumer_secret=CONSUMER_SECRET,
     request_token_params={'scope': 'email'}
 )
 
