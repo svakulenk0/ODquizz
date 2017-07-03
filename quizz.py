@@ -10,6 +10,8 @@ from parse_table import csvclean_service
 
 from settings import CONSUMER_KEY, CONSUMER_SECRET
 
+global table_url
+table_url = 'https://www.wien.gv.at/statistik/ogd/vie_101.csv'
 
 app = Flask(__name__)
 app.config.update(
@@ -41,10 +43,10 @@ class QuizzQuestion(db.Model):
     pub_date = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, user, question, row, column):
+    def __init__(self, user, question, row, column, table):
         self.user = user
         self.question = question
-        # self.table = table
+        self.table = table
         self.row = row
         self.column = column
         self.pub_date = datetime.utcnow()
@@ -66,7 +68,10 @@ def check_user_status():
 
 
 def generate_table(table_url):
-    table = csvclean_service(table_url)
+    if table_url:
+        table = csvclean_service(table_url)
+    else:
+        table = csvclean_service()
     # run with default csv url
     # table = csvclean_service()
     header = json.dumps(table.header_line)
@@ -84,13 +89,15 @@ def new_quiz():
         # return render_template('table.html', rows=rows, header=header)
     return render_template('new_quiz.html', rows=rows, header=header)
 
+
 @app.route('/new_question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
         string = request.form['question']
         row = request.form['row']
         column = request.form['col']
-        question_obj = QuizzQuestion(g.user, string, row, column)
+        print table_url
+        question_obj = QuizzQuestion(g.user, string, row, column, table_url)
         db.session.add(question_obj)
         db.session.commit()
         return redirect(url_for('show_question', question_id=question_obj.id))
@@ -102,8 +109,9 @@ def show_question(question_id):
     print "im showing the question:"
     question_obj = QuizzQuestion.query.get_or_404(question_id)
     print question_obj.question
-    # header, rows = generate_table(question_obj.table_url)
-    return render_template('show_question.html', question_obj=question_obj)
+    header, rows = generate_table(question_obj.table)
+    return render_template('show_question.html', question_obj=question_obj,
+                            header=header, rows=rows)
 
 
 @app.route('/<int:question_id>/delete', methods=['GET', 'POST'])
