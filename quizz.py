@@ -11,7 +11,6 @@ from parse_table import csvclean_service
 from settings import CONSUMER_KEY, CONSUMER_SECRET
 
 global table_url
-table_url = 'https://www.wien.gv.at/statistik/ogd/vie_101.csv'
 
 app = Flask(__name__)
 app.config.update(
@@ -83,10 +82,22 @@ def generate_table(table_url):
 def new_quiz():
     rows = None
     header = None
+    table_url = None
     if request.method == 'POST':
-        table_url = request.form['url']
-        header, rows = generate_table(table_url)
         # return render_template('table.html', rows=rows, header=header)
+        if 'url' in request.form:
+            print request.form['url']
+            table_url = request.form['url']
+            header, rows = generate_table(table_url)
+        elif 'question' in request.form:
+            print request.form['question']
+            string = request.form['question']
+            row = request.form['row']
+            column = request.form['col']
+            question_obj = QuizzQuestion(g.user, string, row, column, table_url)
+            db.session.add(question_obj)
+            db.session.commit()
+            # return redirect(url_for('show_question', question_id=question_obj.id))
     return render_template('new_quiz.html', rows=rows, header=header)
 
 
@@ -96,8 +107,7 @@ def add_question():
         string = request.form['question']
         row = request.form['row']
         column = request.form['col']
-        print table_url
-        question_obj = QuizzQuestion(g.user, string, row, column, table_url)
+        question_obj = QuizzQuestion(g.user, string, row, column, '')
         db.session.add(question_obj)
         db.session.commit()
         return redirect(url_for('show_question', question_id=question_obj.id))
@@ -136,6 +146,24 @@ def my_questions():
         return redirect(url_for('login', next=request.url))
     question_objs = QuizzQuestion.query.filter_by(user=g.user).all()
     return render_template('my_questions.html', question_objs=question_objs)
+
+
+@app.route('/delete-my-questions', methods=['GET', 'POST'])
+def delete_my_questions():
+    if g.user is None:
+        return redirect(url_for('login', next=request.url))
+    if request.method == 'POST':
+        if 'yes' in request.form:
+            # for question_obj in ques
+            question_objs = QuizzQuestion.query.filter_by(user=g.user).delete()
+            # db.session.de.delete(question_objs)
+            db.session.commit()
+            flash('Questions were deleted')
+            return redirect(url_for('new_quiz'))
+        else:
+            return redirect(url_for('show_question', paste_id=paste.id))
+    return render_template('delete_questions.html')
+
 
 
 @app.route('/login')
