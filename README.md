@@ -16,14 +16,6 @@ Method: gamification: game-with-a-purpose providing support for semi-automated q
 
 ## Requirements
 
-pip install:
-
-* Flask
-
-* Flask-OAuth
-
-* Flask-SQLAlchemy
-
 * pyyacp:
 
 git clone https://github.com/ODInfoBiz/pyyacp.git
@@ -32,6 +24,14 @@ git checkout tags/v1.0
 to add to $PYTHONPATH: export PYTHONPATH=$PYTHONPATH:/home/svakulenko/pyyacp/
 to check: echo $PYTHONPATH  
 
+pip install:
+
+* Flask
+
+* Flask-OAuth
+
+* Flask-SQLAlchemy
+
 * python-dateutil
 
 * structlog
@@ -39,21 +39,6 @@ to check: echo $PYTHONPATH
 * pip install git+git://github.com/sebneu/anycsv.git
 
 * unicodecsv
-
-bower install: (run inside static folder! sudo chown -R <user>:<user> /home/<user>/.config/configstore)
-
-* webcomponentsjs
-
-* handsontable/handsontable#^0.25
-
-* Polymer/polymer#^1.2.4
-
-* requirejs
-
-* jquery
-
-* iron-resizable-behavior 
-
 
 ## Features
 
