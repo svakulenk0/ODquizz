@@ -388,7 +388,7 @@ The table accepts data via attribute `datarows` and column headers via attribute
                     if (!Array.isArray(datarows[0]) && datarows.length) {
                         datarows = [datarows];
                     }
-
+                    alert(this.$.tableContainer);
                     var tableContainer = this.$.tableContainer;
                     tableContainer.innerHTML = '';
                     tableContainer.style.height = 'auto';
@@ -470,6 +470,9 @@ The table accepts data via attribute `datarows` and column headers via attribute
                 if (!requireConfigured) {
                     requirejs.config({
                         paths: {
+                            // local
+                            // handsontable: this.resolveUrl('../handsontable/dist/handsontable.full'),
+                            // server
                             handsontable: this.resolveUrl('../static/bower_components/handsontable/dist/handsontable.full'),
                         },
                         shim: {
