@@ -1,5 +1,5 @@
 *.db
 *.pyc
-venv
+magic
 *.egg-info
 settings.py
