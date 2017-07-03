@@ -7,9 +7,9 @@
 <div class=page>
   <h1>Local Open Data Quizz</h1>
   <ul class=nav>
-    <!-- <li><a href="{{ url_for('new_quiz') }}">Create New Quizz</a> -->
+    <li><a href="{{ url_for('new_quiz') }}">Create New Quizz</a>
     {% if g.user %}
-    <li><a href="{{ url_for('my_pastes') }}">My Quizzes</a>
+    <li><a href="{{ url_for('my_questions') }}">My Questions</a>
     <li><a href="{{ url_for('logout') }}">Sign out ({{ g.user.display_name }})</a>
     {% else %}
     <li><a href="{{ url_for('login') }}">Sign in with Facebook</a>

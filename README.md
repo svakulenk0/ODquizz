@@ -32,6 +32,13 @@ Method: gamification: game-with-a-purpose providing support for semi-automated q
 
 * Facebook authentication
 
+## Deployment
+
+Set up Facebook app at developers.facebook.com
+
+App Domains: localhost
+Add Platform -> Website -> Site URL: http://localhost:5000/
+
 ## Acknowledgments
 
 * Jürgen Umbrich, Sebastian Neumaier, Vadim Savenkov. Open Data Hackathon WU. 2017.
