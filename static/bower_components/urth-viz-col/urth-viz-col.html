@@ -1,0 +1,53 @@
+<!--
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
+-->
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+    (function () {
+        'use strict';
+
+        /**
+         * `urth-viz-col` creates a Polymer element that adds a hook to existing Handsontable to update column settings afterLoadData
+         *
+         * @group Urth Viz
+         * @element urth-viz-col
+         */
+
+        Polymer({
+            is: 'urth-viz-col',
+            properties: {
+                /**
+                 * The format this column is using. ex: "$0,0.00".
+                 */
+                format: {
+                    type: String,
+                    reflectToAttribute: true
+                },
+                /**
+                 * The type of format this column is using. ex: "numeric".
+                 */
+                type: {
+                    type: String,
+                    reflectToAttribute: true
+                },
+                /**
+                 * The index this column is, relative to parent table, starting at 0.
+                 */
+                index: {
+                    type: Number,
+                    reflectToAttribute: true
+                }
+            },
+
+            observers: [
+                '_contentChanged(format, type, index)'
+            ],
+
+            _contentChanged: function() {
+                this.fire('col-content-changed');
+            }
+        });
+    })();
+</script>
