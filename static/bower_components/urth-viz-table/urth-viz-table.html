@@ -3,6 +3,7 @@
 # Distributed under the terms of the Modified BSD License.
 -->
 <script src="../requirejs/require.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../urth-viz-col/urth-viz-col.html">
@@ -125,7 +126,7 @@ The table accepts data via attribute `datarows` and column headers via attribute
                 // Handsontable resizes itself based on document.onResize, but
                 // the dashboard also uses iron-resize events when changing layout
                 Polymer.IronResizableBehavior,
-                Urth.VizSelectionBehavior,
+                // Urth.VizSelectionBehavior,
                 Urth.DisplayErrorBehavior
             ],
 
@@ -226,14 +227,21 @@ The table accepts data via attribute `datarows` and column headers via attribute
              * By setting the col to -1, this forces handson to think that the user clicked on a row header and it goes
              * through the path of selecting the entire row.
              */
-            _forceRowSelection: function (event, coords) {
-                // this.rowActive = coords.row;
-                this.colActive = coords.col;
-                // coords.col = -1; //force row selection
-                if(coords.row == -1) { // if user clicked on header row, they're trying to sort the column, so stop propagation
-                    event.stopImmediatePropagation();
-                }
+            _promptQuestion: function (event, coords) {
+                var question = prompt("Please enter a question for this cell", "");
+                var data = {question: question, row: coords.row, col: coords.col};
+                $.post('/new_question', data);
             },
+
+            // _forceRowSelection: function (event, coords) {
+            //     this.rowActive = coords.row;
+            //     this.colActive = coords.col;
+
+            //     coords.col = -1; //force row selection
+            //     if(coords.row == -1) { // if user clicked on header row, they're trying to sort the column, so stop propagation
+            //         event.stopImmediatePropagation();
+            //     }
+            // },
 
             _selectionIndexChanged: function(newIndex, oldIndex) {
                 if (oldIndex != newIndex) {
@@ -272,7 +280,7 @@ The table accepts data via attribute `datarows` and column headers via attribute
             //         var selObj = {};
             //         var row = selection;
             //         this.columns.forEach(function(col, i) {
-            //             col = col.replace(" ", "_");
+            //             // col = col.replace(" ", "_");
             //             selObj[col] = row[i];
             //         });
             //         this._setSelection(selObj);
@@ -371,7 +379,7 @@ The table accepts data via attribute `datarows` and column headers via attribute
             },
 
             _createTable: function (datarows) {
-                require(['handsontable'], function(Handsontable) {
+                requirejs(['handsontable'], function(Handsontable) {
                     console.assert(datarows);
 
                     if (!Array.isArray(datarows[0]) && datarows.length) {
@@ -401,7 +409,8 @@ The table accepts data via attribute `datarows` and column headers via attribute
                                 this.colActive = selected[1];
                             }
                         }.bind(this),
-                        beforeOnCellMouseDown: this._forceRowSelection.bind(this),
+                        // beforeOnCellMouseDown: this._forceRowSelection.bind(this),
+                        afterOnCellMouseDown: this._promptQuestion.bind(this),
                         // afterSelectionEnd: this._handleSelection.bind(this),
                         afterDeselect: function() {
                             var index = this.selectionIndex;
