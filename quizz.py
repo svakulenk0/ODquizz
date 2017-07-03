@@ -65,11 +65,10 @@ def check_user_status():
         g.user = User.query.get(session['user_id'])
 
 
-def generate_table(request):
-    if g.table_url:
-        table = csvclean_service(g.table_url)
+def generate_table(table_url):
+    table = csvclean_service(table_url)
     # run with default csv url
-    table = csvclean_service()
+    # table = csvclean_service()
     header = json.dumps(table.header_line)
     rows = json.dumps(table.sample[1:])
     return (header, rows)
@@ -80,8 +79,8 @@ def new_quiz():
     rows = None
     header = None
     if request.method == 'POST':
-        g.table_url = request.form['url']
-        header, rows = generate_table(g.table_url)
+        table_url = request.form['url']
+        header, rows = generate_table(table_url)
         # return render_template('table.html', rows=rows, header=header)
     return render_template('new_quiz.html', rows=rows, header=header)
 
