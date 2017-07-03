@@ -46,12 +46,19 @@ pip install:
 
 ## Deployment
 
-Set up Facebook app at developers.facebook.com
+* Set up Facebook app at developers.facebook.com
 
 App Domains: localhost
 Add Platform -> Website -> Site URL: http://localhost:5000/
 
-Run:
+* Init DB:
+
+(in python iterpreter)
+import quizz
+quizz.db.create_all()
+exit()
+
+* Run:
 
 python quizz.py
 
