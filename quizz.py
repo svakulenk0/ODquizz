@@ -14,7 +14,7 @@ from settings import CONSUMER_KEY, CONSUMER_SECRET
 app = Flask(__name__)
 app.config.update(
     DEBUG=True,
-    SQLALCHEMY_DATABASE_URI='sqlite:///pastebin.db',
+    SQLALCHEMY_DATABASE_URI='sqlite:///odquizz.db',
     SECRET_KEY='development-key'
 )
 db = SQLAlchemy(app)
@@ -31,23 +31,30 @@ facebook = oauth.remote_app('facebook',
 )
 
 
-class Paste(db.Model):
+class QuizzQuestion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.Text)
+    question = db.Column(db.Text)
+    table = db.Column(db.Text)
+    column = db.Column(db.Integer)
+    row = db.Column(db.Integer)
+
     pub_date = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, user, code):
+    def __init__(self, user, question, row, column):
         self.user = user
-        self.code = code
+        self.question = question
+        self.row = row
+        self.column = column
         self.pub_date = datetime.utcnow()
+        print "new question object created"
 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     display_name = db.Column(db.String(120))
     fb_id = db.Column(db.String(30), unique=True)
-    pastes = db.relationship(Paste, lazy='dynamic', backref='user')
+    questions = db.relationship(QuizzQuestion, lazy='dynamic', backref='user')
 
 
 @app.before_request
@@ -67,48 +74,61 @@ def generate_table(request):
 
 @app.route('/', methods=['GET', 'POST'])
 def new_quiz():
+    rows = None
+    header = None
     if request.method == 'POST':
         table = generate_table(request)
         # table = csvclean_service(request.form['url'])
     # if request.method == 'POST' and request.form['code']:
-    #     paste = Paste(g.user, request.form['code'])
-    #     db.session.add(paste)
-    #     db.session.commit()
-    #     return redirect(url_for('show_paste', paste_id=paste.id))
+    #     
         header = json.dumps(table.header_line)
         rows = json.dumps(table.sample[1:])
-        return render_template('new_quiz.html', rows=rows, header=header)
-    return render_template('layout.html')
+    return render_template('new_quiz.html', rows=rows, header=header)
+    # return render_template('layout.html')
+
+@app.route('/new_question', methods=['GET', 'POST'])
+def add_question():
+    if request.method == 'POST':
+        string = request.form['question']
+        row = request.form['row']
+        column = request.form['col']
+        question_obj = QuizzQuestion(g.user, string, row, column)
+        db.session.add(question_obj)
+        db.session.commit()
+        return redirect(url_for('show_question', question_id=question_obj.id))
+    # return render_template('layout.html')
 
 
-@app.route('/<int:paste_id>')
-def show_paste(paste_id):
-    paste = Paste.query.get_or_404(paste_id)
-    return render_template('show_paste.html', paste=paste)
+@app.route('/<int:question_id>')
+def show_question(question_id):
+    print "im showing the question:"
+    question_obj = QuizzQuestion.query.get_or_404(question_id)
+    print question_obj.question
+    return render_template('show_question.html', question_obj=question_obj)
 
 
-@app.route('/<int:paste_id>/delete', methods=['GET', 'POST'])
-def delete_paste(paste_id):
-    paste = Paste.query.get_or_404(paste_id)
-    if g.user is None or g.user != paste.user:
+@app.route('/<int:question_id>/delete', methods=['GET', 'POST'])
+def delete_question(question_id):
+    question_obj = QuizzQuestion.query.get_or_404(question_id)
+    if g.user is None or g.user != question_obj.user:
         abort(401)
     if request.method == 'POST':
         if 'yes' in request.form:
-            db.session.delete(paste)
+            db.session.delete(question_obj)
             db.session.commit()
-            flash('Paste was deleted')
+            flash('Question was deleted')
             return redirect(url_for('new_quiz'))
         else:
-            return redirect(url_for('show_paste', paste_id=paste.id))
-    return render_template('delete_paste.html', paste=paste)
+            return redirect(url_for('show_question', paste_id=paste.id))
+    return render_template('delete_question.html', question_obj=question_obj)
 
 
-@app.route('/my-pastes')
-def my_pastes():
+@app.route('/my-questions')
+def my_questions():
     if g.user is None:
         return redirect(url_for('login', next=request.url))
-    pastes = Paste.query.filter_by(user=g.user).all()
-    return render_template('my_pastes.html', pastes=pastes)
+    question_objs = QuizzQuestion.query.filter_by(user=g.user).all()
+    return render_template('my_questions.html', question_objs=question_objs)
 
 
 @app.route('/login')
