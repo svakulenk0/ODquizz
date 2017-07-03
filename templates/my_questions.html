@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}My Questions{% endblock %}
+{% block body %}
+  <h2>My Questions</h2>
+  
+  <dd><a href="{{ url_for('delete_my_questions')}}">Delete All</a>
+
+  <ul>
+  {% for question_obj in question_objs %}
+    <li><a href="{{ url_for('show_question', question_id=question_obj.id) }}">{{ question_obj.question }}</a>
+      from {{ question_obj.table }}
+  {% endfor %}
+  </ul>
+{% endblock %}

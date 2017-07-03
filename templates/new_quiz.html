@@ -2,16 +2,31 @@
 {% block title %}New Quizz{% endblock %}
 {% block body %}
 
-	Click on the cell to add a new question!
-	<urth-viz-table datarows="{{rows}}"
-			  columns="{{header}}" 
-	      rows-visible="15" 
-	      selection-as-object>
-	</urth-viz-table>
+	<h2>Add New Question</h2>
+
+	<ol>
+	<li>Provide URL to a CSV table to display</li>
+	<li>Click on the answer cell to add a new question</li>
+	</ol>
+
+	<strong>Attention</strong>: the table has to provide sufficient information to answer the question!
+
+	<p>
+
+	<h2>Table:</h2>
+
+	<form method="POST">
+	  <input type="text" id="url" name="url" list="urls" size="70" value="https://www.wien.gv.at/finanzen/ogd/hunde-wien.csv"/>
+	  <!-- datalist does not work in safari! tested in chrome -->
+	  <datalist id="urls">
+	    <option value="https://www.wien.gv.at/finanzen/ogd/hunde-wien.csv">
+	    <option value="https://www.wien.gv.at/statistik/ogd/vie_101.csv">
+	  </datalist>
+	  <input type=submit value="Display table">
+	</form>
+
+	<p>
   
-  <!-- Add a new question by clicking on one of the cells that you want to use as the answer! -->
-  <!-- <form action="" method=post>
-    <div class=code><textarea name=code cols=60 rows=1></textarea></div>
-    <p><input type=submit value="Add question">
-  </form> -->
+  {% include "partials/table.html" %}
+  
 {% endblock %}
