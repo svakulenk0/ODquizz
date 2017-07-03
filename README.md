@@ -52,6 +52,8 @@ bower install: (run inside static folder! sudo chown -R <user>:<user> /home/<use
 
 * jquery
 
+* iron-resizable-behavior 
+
 
 ## Features
 
