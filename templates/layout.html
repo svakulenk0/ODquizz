@@ -7,7 +7,7 @@
 <div class=page>
   <h1>Open Data Quizz</h1>
   <ul class=nav>
-    <li><a href="{{ url_for('new_quiz') }}">Add New Question</a>
+    <li><a href="{{ url_for('new_quiz') }}">New Table</a>
     {% if g.user %}
     <li><a href="{{ url_for('my_questions') }}">My Questions</a>
     <li><a href="{{ url_for('logout') }}">Sign out ({{ g.user.display_name }})</a>

@@ -44,6 +44,7 @@ class QuizzQuestion(db.Model):
     def __init__(self, user, question, row, column):
         self.user = user
         self.question = question
+        # self.table = table
         self.row = row
         self.column = column
         self.pub_date = datetime.utcnow()
@@ -65,11 +66,13 @@ def check_user_status():
 
 
 def generate_table(request):
-    url = request.form['url']
-    if url:
-        return csvclean_service(url)
+    if g.table_url:
+        table = csvclean_service(g.table_url)
     # run with default csv url
-    return csvclean_service()
+    table = csvclean_service()
+    header = json.dumps(table.header_line)
+    rows = json.dumps(table.sample[1:])
+    return (header, rows)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -77,14 +80,10 @@ def new_quiz():
     rows = None
     header = None
     if request.method == 'POST':
-        table = generate_table(request)
-        # table = csvclean_service(request.form['url'])
-    # if request.method == 'POST' and request.form['code']:
-    #     
-        header = json.dumps(table.header_line)
-        rows = json.dumps(table.sample[1:])
+        g.table_url = request.form['url']
+        header, rows = generate_table(g.table_url)
+        # return render_template('table.html', rows=rows, header=header)
     return render_template('new_quiz.html', rows=rows, header=header)
-    # return render_template('layout.html')
 
 @app.route('/new_question', methods=['GET', 'POST'])
 def add_question():
@@ -104,6 +103,7 @@ def show_question(question_id):
     print "im showing the question:"
     question_obj = QuizzQuestion.query.get_or_404(question_id)
     print question_obj.question
+    # header, rows = generate_table(question_obj.table_url)
     return render_template('show_question.html', question_obj=question_obj)
 
 
