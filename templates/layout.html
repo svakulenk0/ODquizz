@@ -1,13 +1,13 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} | Local Ignorance Test</title>
+<title>{% block title %}{% endblock %} | Open Data Quizz</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 <script src="{{ url_for('static', filename='bower_components/webcomponentsjs/webcomponents-lite.js') }}"></script>
 
 <link rel="import" href="{{ url_for('static', filename='bower_components/urth-viz-table/urth-viz-table.html') }}" is='urth-core-import' is='urth-core-import'>
 <div class=page>
-  <h1>Local Open Data Quizz</h1>
+  <h1>Open Data Quizz</h1>
   <ul class=nav>
-    <li><a href="{{ url_for('new_quiz') }}">Create New Quizz</a>
+    <li><a href="{{ url_for('new_quiz') }}">Add New Question</a>
     {% if g.user %}
     <li><a href="{{ url_for('my_questions') }}">My Questions</a>
     <li><a href="{{ url_for('logout') }}">Sign out ({{ g.user.display_name }})</a>
@@ -19,16 +19,6 @@
     <p class=flash>{{ message }}
   {% endfor %}
 
-  <h2>New Quizz</h2>
-
-  <form method="POST">
-    <input type="text" id="url" name="url" list="urls" placeholder="provide URL to a CSV table to display" size="50" />
-    <!-- datalist does not work in safari! tested in chrome -->
-    <datalist id="urls">
-      <option value="https://www.wien.gv.at/finanzen/ogd/hunde-wien.csv">
-      <option value="https://www.wien.gv.at/statistik/ogd/vie_101.csv">
-    </datalist>
-  </form>
   {% block body %}{% endblock %}
 </div>
 <!-- Powered by pyyacp -->

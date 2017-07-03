@@ -1,8 +1,8 @@
-# Local Ignorance Test
+# Open Data Quizz Builder
 
-Web-site for constructing Local Open Data (OD) Quizzes.
+Web-site for constructing Open Data (OD) Quizzes.
 
-Local OD Quizz is a quiz designed for local communities featuring tables with official goverment statistics.
+OD Quizz is a quiz featuring tables with official goverment statistics pulled out from the Open Data portals designed to motivate citizens participation, awareness and transparancy.
 
 
 Goals: 
@@ -47,7 +47,7 @@ Add Platform -> Website -> Site URL: http://localhost:5000/
 
 * Armin Ronacher. PyLadies Flask Workshop tutorial. https://github.com/mitsuhiko/pyladies-flask
 
-## Related Work
+## Inspiration and Related Work
 
 * CSV Engine http://data.wu.ac.at/csvengine/clean
 

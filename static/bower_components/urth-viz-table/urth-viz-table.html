@@ -228,9 +228,12 @@ The table accepts data via attribute `datarows` and column headers via attribute
              * through the path of selecting the entire row.
              */
             _promptQuestion: function (event, coords) {
-                var question = prompt("Please enter a question for this cell", "");
-                var data = {question: question, row: coords.row, col: coords.col};
-                $.post('/new_question', data);
+                if(coords.row != -1) { // if user clicked on header row, they're trying to sort the column, so do not display the pop-up
+                    var question = prompt("Please enter a question for this cell", "");
+                    var data = {question: question, row: coords.row, col: coords.col};
+                    $.post('/new_question', data);
+                }
+                
             },
 
             // _forceRowSelection: function (event, coords) {
