@@ -14,7 +14,7 @@ from pyyacp.yacp import YACParser
 TEST_TABLE_URL = "https://www.wien.gv.at/finanzen/ogd/hunde-wien.csv"
 
 
-def csvclean_service(url):
+def csvclean_service(url=TEST_TABLE_URL):
     '''
     returns parsed table object from the YACParser
     '''
@@ -30,9 +30,9 @@ def test_csvclean_service(url=TEST_TABLE_URL):
 
     # for cell in table:
     #     print "; ".join(cell)
-    for row in table.sample:
+    for row in table.sample[1:]:
         print row
-    return table.sample
+
 
 if __name__ == "__main__":
     test_csvclean_service()
