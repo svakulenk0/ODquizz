@@ -6,7 +6,7 @@
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../urth-viz-col/urth-viz-col.html">
-<!-- <link rel="import" href="../urth-viz-behaviors/urth-viz-selection-behavior.html"> -->
+<link rel="import" href="../urth-viz-behaviors/urth-viz-selection-behavior.html">
 <link rel="import" href="../urth-core-behaviors/error-display-behavior.html">
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
 
@@ -125,7 +125,7 @@ The table accepts data via attribute `datarows` and column headers via attribute
                 // Handsontable resizes itself based on document.onResize, but
                 // the dashboard also uses iron-resize events when changing layout
                 Polymer.IronResizableBehavior,
-                // Urth.VizSelectionBehavior,
+                Urth.VizSelectionBehavior,
                 Urth.DisplayErrorBehavior
             ],
 
@@ -210,12 +210,12 @@ The table accepts data via attribute `datarows` and column headers via attribute
                         this.fire('urth-viz-render');
 
                         // reset selection to null if it was previously set
-                        // if (this.selection) {
-                        //     this._setSelection(null);
-                        //     this._setSelectionInfo(null);
-                        //     // deselect range that was previously highlighted
-                        //     this.hot.deselectCell();
-                        // }
+                        if (this.selection) {
+                            this._setSelection(null);
+                            this._setSelectionInfo(null);
+                            // deselect range that was previously highlighted
+                            this.hot.deselectCell();
+                        }
                     } else {
                         this._createTable(datarows);
                     }
@@ -226,25 +226,20 @@ The table accepts data via attribute `datarows` and column headers via attribute
              * By setting the col to -1, this forces handson to think that the user clicked on a row header and it goes
              * through the path of selecting the entire row.
              */
-            _promptQuestion: function (event, coords) {
-                var question = prompt("Please enter a question for this cell", "");
+            _forceRowSelection: function (event, coords) {
+                // this.rowActive = coords.row;
+                this.colActive = coords.col;
+                // coords.col = -1; //force row selection
+                if(coords.row == -1) { // if user clicked on header row, they're trying to sort the column, so stop propagation
+                    event.stopImmediatePropagation();
+                }
             },
 
-            // _forceRowSelection: function (event, coords) {
-            //     this.rowActive = coords.row;
-            //     this.colActive = coords.col;
-
-            //     // coords.col = -1; //force row selection
-            //     if(coords.row == -1) { // if user clicked on header row, they're trying to sort the column, so stop propagation
-            //         event.stopImmediatePropagation();
-            //     }
-            // },
-
-            // _selectionIndexChanged: function(newIndex, oldIndex) {
-            //     if (oldIndex != newIndex) {
-            //         this.hot && this.hot.selectCell(newIndex, 0, newIndex, this.columns.length - 1, true);
-            //     }
-            // },
+            _selectionIndexChanged: function(newIndex, oldIndex) {
+                if (oldIndex != newIndex) {
+                    this.hot && this.hot.selectCell(newIndex, 0, newIndex, this.columns.length - 1, true);
+                }
+            },
 
             /*
              * Handle when selection has finished taking place on handson
@@ -277,7 +272,7 @@ The table accepts data via attribute `datarows` and column headers via attribute
             //         var selObj = {};
             //         var row = selection;
             //         this.columns.forEach(function(col, i) {
-            //             // col = col.replace(" ", "_");
+            //             col = col.replace(" ", "_");
             //             selObj[col] = row[i];
             //         });
             //         this._setSelection(selObj);
@@ -286,47 +281,47 @@ The table accepts data via attribute `datarows` and column headers via attribute
             //     }
             // },
 
-            // _handleAfterSort: function() {
-            //     // if there is a previous selection, we need to handle re-highlighting it
-            //     if (this.selection) {
-            //         // since table has been sorted, the selectionIndex is not always the correct index
-            //         // of data anymore. Because even though the table view is sorted, this.datarows stays the same
+            _handleAfterSort: function() {
+                // if there is a previous selection, we need to handle re-highlighting it
+                if (this.selection) {
+                    // since table has been sorted, the selectionIndex is not always the correct index
+                    // of data anymore. Because even though the table view is sorted, this.datarows stays the same
 
-            //         // We will find the logical index of the selection (the index in this.datarows)
-            //         // and then use that to look up physical index of the table view
+                    // We will find the logical index of the selection (the index in this.datarows)
+                    // and then use that to look up physical index of the table view
 
-            //         // find logical index of selection in this.datarows
-            //         var sel = this.selection;
-            //         var logicalIndex = -1;
-            //         this.datarows.some(function(row, rowIndex) {
-            //             var matched = row.every(function(col, colIndex) {
-            //                 return col === sel[colIndex];
-            //             });
-            //             if (matched) {
-            //                 logicalIndex = rowIndex;
-            //             }
-            //             return matched;
-            //         });
+                    // find logical index of selection in this.datarows
+                    var sel = this.selection;
+                    var logicalIndex = -1;
+                    this.datarows.some(function(row, rowIndex) {
+                        var matched = row.every(function(col, colIndex) {
+                            return col === sel[colIndex];
+                        });
+                        if (matched) {
+                            logicalIndex = rowIndex;
+                        }
+                        return matched;
+                    });
 
-            //         // find physical index of sorted table view
-            //         var physicalIndex = logicalIndex;
-            //         this.hot.sortIndex.some(function(sortedRow, sortedIndex) {
-            //             if(sortedRow[0] == logicalIndex) {
-            //                 physicalIndex = sortedIndex;
-            //                 return true;
-            //             }
-            //         });
+                    // find physical index of sorted table view
+                    var physicalIndex = logicalIndex;
+                    this.hot.sortIndex.some(function(sortedRow, sortedIndex) {
+                        if(sortedRow[0] == logicalIndex) {
+                            physicalIndex = sortedIndex;
+                            return true;
+                        }
+                    });
 
-            //         // update rowActive so _handleSelection can update selectionInfo
-            //         this.rowActive = physicalIndex;
-            //         if (physicalIndex != -1) {
-            //             this.hot.selectCell(physicalIndex, 0, physicalIndex, this.columns.length - 1, true);
-            //         } else {
-            //             this.selectionIndex = -1;
-            //             this.hot.deselectCell();
-            //         }
-            //     }
-            // },
+                    // update rowActive so _handleSelection can update selectionInfo
+                    this.rowActive = physicalIndex;
+                    if (physicalIndex != -1) {
+                        this.hot.selectCell(physicalIndex, 0, physicalIndex, this.columns.length - 1, true);
+                    } else {
+                        this.selectionIndex = -1;
+                        this.hot.deselectCell();
+                    }
+                }
+            },
 
             _willDataFit: function(datarows) {
                 return datarows.length < this.rowsVisible;
@@ -376,7 +371,7 @@ The table accepts data via attribute `datarows` and column headers via attribute
             },
 
             _createTable: function (datarows) {
-                requirejs(['handsontable'], function(Handsontable) {
+                require(['handsontable'], function(Handsontable) {
                     console.assert(datarows);
 
                     if (!Array.isArray(datarows[0]) && datarows.length) {
@@ -399,28 +394,26 @@ The table accepts data via attribute `datarows` and column headers via attribute
                         columns: columnSettings,
                         stretchH: 'all',
                         disableVisualSelection: 'area',
-                        // multiSelectBoolean: false,
-                        // afterDocumentKeyDown: function(row, col) {
-                        //     var selected = this.hot.getSelected();
-                        //     if (selected) {
-                        //         this.rowActive = selected[0];
-                        //         this.colActive = selected[1];
-                        //     }
-                        // }.bind(this),
-                        // beforeOnCellMouseDown: this._forceRowSelection.bind(this),
-                        afterOnCellMouseDown: this._promptQuestion.bind(this),
+                        afterDocumentKeyDown: function(row, col) {
+                            var selected = this.hot.getSelected();
+                            if (selected) {
+                                this.rowActive = selected[0];
+                                this.colActive = selected[1];
+                            }
+                        }.bind(this),
+                        beforeOnCellMouseDown: this._forceRowSelection.bind(this),
                         // afterSelectionEnd: this._handleSelection.bind(this),
-                        // afterDeselect: function() {
-                        //     var index = this.selectionIndex;
-                        //     this.hot.selectCell(index, 0, index, this.columns.length - 1, true);
-                        //     this.hot.unlisten();
-                        // }.bind(this),
-                        // beforeColumnSort: function() {
-                        //     this.selectionIndex = -1;
-                        //     if (this.disableLocalSort) {
-                        //         return false; // if sort column is set, return false to disable Handson sort
-                        //     }
-                        // }.bind(this),
+                        afterDeselect: function() {
+                            var index = this.selectionIndex;
+                            this.hot.selectCell(index, 0, index, this.columns.length - 1, true);
+                            this.hot.unlisten();
+                        }.bind(this),
+                        beforeColumnSort: function() {
+                            this.selectionIndex = -1;
+                            if (this.disableLocalSort) {
+                                return false; // if sort column is set, return false to disable Handson sort
+                            }
+                        }.bind(this),
                         afterColumnSort: function(colIndex, order) {
                             // store sorted column and sorted order
                             this.sortColumn = this.columns[colIndex];
