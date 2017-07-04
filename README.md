@@ -48,17 +48,14 @@ pip install:
 
 * Set up Facebook app at developers.facebook.com
 
+This field must be at most 32 characters long. means that you did not insert your credentials in settings.py
+
 App Domains: localhost
 Add Platform -> Website -> Site URL: http://localhost:5000/
 
-* Init DB:
+* To init and/or clear the DB run restart_db.py
 
-(in python iterpreter)
-import quizz
-quizz.db.create_all()
-exit()
-
-* Run:
+* Start web-app:
 
 python quizz.py
 
