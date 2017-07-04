@@ -1,15 +1,16 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} | Open Data Quizz</title>
+<title>{% block title %}{% endblock %} | Open Data Quizz Builder</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 <script src="{{ url_for('static', filename='bower_components/webcomponentsjs/webcomponents-lite.js') }}"></script>
 
 <link rel="import" href="{{ url_for('static', filename='bower_components/urth-viz-table/urth-viz-table.html') }}" is='urth-core-import' is='urth-core-import'>
+
 <div class=page>
-  <h1>Open Data Quizz</h1>
+  <h1>Open Data Quizz Builder</h1>
   <ul class=nav>
-    <li><a href="{{ url_for('new_quiz') }}">New Table</a>
-    {% if g.user %}
+    <li><a href="{{ url_for('new_question') }}">New Question</a>
     <li><a href="{{ url_for('my_questions') }}">My Questions</a>
+    {% if g.user %}
     <li><a href="{{ url_for('logout') }}">Sign out ({{ g.user.display_name }})</a>
     {% else %}
     <li><a href="{{ url_for('login') }}">Sign in with Facebook</a>

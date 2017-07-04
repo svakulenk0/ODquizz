@@ -1,14 +1,19 @@
 {% extends "layout.html" %}
 {% block title %}My Questions{% endblock %}
 {% block body %}
+  {% if question_objs %}
   <h2>My Questions</h2>
-  
-  <dd><a href="{{ url_for('delete_my_questions')}}">Delete All</a>
+  <!-- <dd><a href="{{ url_for('delete_my_questions')}}">Delete All</a> -->
+  <form method="POST" action="{{ url_for('new_quizz') }}" >
+	  {% for question_obj in question_objs %}
+	  	<input type="checkbox" name="questions" value="{{question_obj.id}}"> <a href="{{ url_for('show_question', question_id=question_obj.id) }}">{{ question_obj.question }}?</a> {{ question_obj.answer }}
+	  	<!-- from {{ question_obj.table }}  -->
+	  	<br>
+	  {% endfor %}
+  	  <input type="submit" value="Create Quiz">
+  </form>
+  {% else %}
+  <h3>You do not have any questions yet!</h3>
+  {% endif %}
 
-  <ul>
-  {% for question_obj in question_objs %}
-    <li><a href="{{ url_for('show_question', question_id=question_obj.id) }}">{{ question_obj.question }}</a>
-      from {{ question_obj.table }}
-  {% endfor %}
-  </ul>
 {% endblock %}
