@@ -1,4 +1,4 @@
-{% extends "new_quiz.html" %}
+{% extends "new_question.html" %}
 {% block title %}Quizz #{{ question_obj.id }}{% endblock %}
 {% block body %}
   <h2>Question #{{ question_obj.id }}</h2>
@@ -7,9 +7,8 @@
     <!-- <dt>Author
     <dd>{{ question_obj.user.display_name }}
     {% endif %}
-    <dt>Date
-    <dd>{{ question_obj.pub_date.strftime('%Y-%m-%d @ %H:%M') }}
     {% if g.user and question_obj.user == g.user %} -->
+    
     <dt>Actions
     <dd><a href="{{ url_for('delete_question', question_id=question_obj.id) }}">Delete</a>
     {% endif %}
