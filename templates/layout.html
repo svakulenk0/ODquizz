@@ -1,8 +1,6 @@
 <!doctype html>
 <title>{% block title %}{% endblock %} | Open Data Quizz Builder</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-<script src="{{ url_for('static', filename='bower_components/webcomponentsjs/webcomponents-lite.js') }}"></script>
-
 <link rel="import" href="{{ url_for('static', filename='bower_components/urth-viz-table/urth-viz-table.html') }}" is='urth-core-import' is='urth-core-import'>
 
 <div class=page>
@@ -23,5 +21,7 @@
   {% block body %}{% endblock %}
 </div>
 <!-- Powered by pyyacp -->
+
+<script src="{{ url_for('static', filename='bower_components/webcomponentsjs/webcomponents-lite.js') }}"></script>
 
 

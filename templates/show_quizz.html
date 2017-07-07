@@ -1,0 +1,40 @@
+<!doctype html>
+<title>Open Data Quizz</title>
+
+{% block body %}
+  <h2>{{ quizz_obj.title }}</h2>
+  
+  <dl>
+
+  
+  <li>
+    {% for question_obj in quizz_obj.questions %}
+
+      <form action="{{ url_for('new_quizz') }}" method="post" id="question">
+      <!-- question is here -->
+      <h3>{{ question_obj.question }}</h3>
+      <!-- correct answer -->
+      <div>
+        <input type="radio" id="{{ question_obj.id }}" value="{{ question_obj }}" />
+        {{ question_obj.answer }}
+      </div>
+      <!-- artificial answers TODO generator! -->
+      <div>
+        <input type="radio" id="false1" />
+        False Answer 1
+      </div>
+
+      <div>
+        <input type="radio" id="false2" />
+        False Answer 2
+      </div>
+
+      <input type="submit" value="Submit Answer" />
+      </form>
+
+      {% include "partials/table.html" %}
+      
+    {% endfor %}
+  </li>
+
+{% endblock %}

@@ -6,7 +6,7 @@
   <!-- <dd><a href="{{ url_for('delete_my_questions')}}">Delete All</a> -->
   <form method="POST" action="{{ url_for('new_quizz') }}" >
 	  {% for question_obj in question_objs %}
-	  	<input type="checkbox" name="questions" value="{{question_obj.id}}"> <a href="{{ url_for('show_question', question_id=question_obj.id) }}">{{ question_obj.question }}?</a> {{ question_obj.answer }}
+	  	<input type="checkbox" checked="checked" name="questions" value="{{question_obj.id}}"> <a href="{{ url_for('show_question', question_id=question_obj.id) }}">{{ question_obj.question }}?</a> {{ question_obj.answer }}
 	  	<!-- from {{ question_obj.table }}  -->
 	  	<br>
 	  {% endfor %}
