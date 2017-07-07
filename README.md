@@ -40,9 +40,15 @@ pip install:
 
 * unicodecsv
 
+
+* semantic-ui https://semantic-ui.com/introduction/getting-started.html
+
+
+
 ## Features
 
 * Facebook authentication
+
 
 ## Deployment
 
@@ -59,6 +65,7 @@ Add Platform -> Website -> Site URL: http://localhost:5000/
 
 python quizz.py
 
+
 ## Acknowledgments
 
 * Jürgen Umbrich, Sebastian Neumaier, Vadim Savenkov. Open Data Hackathon WU. 2017.
@@ -66,6 +73,8 @@ python quizz.py
 * Declarative widgets Polymer elements https://github.com/jupyter-widgets/declarativewidgets/tree/master/elements
 
 * Armin Ronacher. PyLadies Flask Workshop tutorial. https://github.com/mitsuhiko/pyladies-flask
+
+* HTML Quizz Tutorial https://css-tricks.com/building-a-simple-quiz/
 
 ## Inspiration and Related Work
 
