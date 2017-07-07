@@ -227,13 +227,12 @@ The table accepts data via attribute `datarows` and column headers via attribute
              * By setting the col to -1, this forces handson to think that the user clicked on a row header and it goes
              * through the path of selecting the entire row.
              */
-            _promptQuestion: function (event, coords) {
+            _promptQuestion: function (event, coords, td) {
                 if(coords.row != -1) { // if user clicked on header row, they're trying to sort the column, so do not display the pop-up
                     var question = prompt("Please enter a question for this cell", "");
-                    var data = {question: question, row: coords.row, col: coords.col};
+                    var data = {question: question, row: coords.row, col: coords.col, answer: td.innerHTML};
                     $.post('/new_question', data);
                 }
-                
             },
 
             // _forceRowSelection: function (event, coords) {
