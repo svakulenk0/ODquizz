@@ -177,7 +177,7 @@ def submit_quizz():
     return render_template('results.html', quizz_obj=quizz_obj)
 
 
-@app.route('/quizz', methods=['POST'])
+@app.route('/quizz', methods=['GET', 'POST'])
 def new_quizz():
     rows = None
     header = None
