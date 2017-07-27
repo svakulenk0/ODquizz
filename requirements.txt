@@ -1,5 +1,5 @@
 -e git+https://github.com/sebneu/anycsv.git#egg=anycsv
--e git+https://github.com/ODInfoBiz/pyyacp#egg=pyyacp 
+-e git+https://github.com/ODInfoBiz/pyyacp@v1.0#egg=pyyacp 
 cchardet==2.1.1
 certifi==2017.4.17
 chardet==3.0.4
