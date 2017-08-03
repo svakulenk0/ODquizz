@@ -57,13 +57,29 @@ pip install:
 This field must be at most 32 characters long. means that you did not insert your credentials in settings.py
 
 App Domains: localhost
-Add Platform -> Website -> Site URL: http://localhost:5000/
+Add Platform -> Website -> Site URL: http://localhost:5001/
 
 * To init and/or clear the DB run restart_db.py
 
 * Start web-app:
 
 python quizz.py
+
+
+* Go to http://127.0.0.1:5001
+
+
+## TODO
+
+* fix quizz in show_quizz.html (checkbox multiple answers)
+
+* generate unique link for quizz to share with friends
+
+* improve UI quizz layout e.g. https://semantic-ui.com
+
+* display the correct answer on Submit from the hidden content with
+
+https://semantic-ui.com/elements/reveal.html (Move)
 
 
 ## Acknowledgments
