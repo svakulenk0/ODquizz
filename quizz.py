@@ -47,7 +47,7 @@ class Quizz(db.Model):
     pub_date = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     questions = db.relationship('Question', secondary=quizz_questions,
-                backref=db.backref('quizzes', lazy='dynamic'))
+                                backref=db.backref('quizzes', lazy='dynamic'))
 
     def __init__(self, user, title):
         self.user = user
@@ -148,14 +148,6 @@ def show_question(question_id):
                             header=header, rows=rows)
 
 
-# @app.route('/answer', methods=['POST'])
-# def show_answer():
-#     question_obj = request.form['question']
-#     header, rows = generate_table(question_obj.table)
-#     return render_template('show_quizz.html',
-#                             header=header, rows=rows)
-
-
 @app.route('/<int:question_id>/delete', methods=['GET', 'POST'])
 def delete_question(question_id):
     question_obj = Question.query.get_or_404(question_id)
@@ -170,11 +162,6 @@ def delete_question(question_id):
         else:
             return redirect(url_for('show_question', question_id=question_obj.id))
     return render_template('delete_question.html', question_obj=question_obj)
-
-
-@app.route('/quizz-results', methods=['GET', 'POST'])
-def submit_quizz():
-    return render_template('results.html', quizz_obj=quizz_obj)
 
 
 @app.route('/quizz', methods=['GET', 'POST'])
