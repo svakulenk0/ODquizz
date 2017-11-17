@@ -14,6 +14,10 @@ Goals:
 
 Method: gamification: game-with-a-purpose providing support for semi-automated quiz construction.
 
+## Documentation
+
+[Handsontable API Reference](https://docs.handsontable.com/0.34.5/Core.html)
+
 ## Requirements
 
 * pyyacp:
